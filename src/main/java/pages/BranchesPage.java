@@ -38,11 +38,6 @@ public class BranchesPage extends BasePage {
         return driver.getTitle().contains("סניפים וערוצי שירות");
     }
 
-//    public void clickFirstBranch() {
-//        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-//        WebElement firstBranch = wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector(".branch-item:first-child a")));
-//        firstBranch.click();
-//    }
 
     public void clickFirstBranch() {
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));

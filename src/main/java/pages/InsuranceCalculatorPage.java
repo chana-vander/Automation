@@ -17,10 +17,6 @@ public class InsuranceCalculatorPage extends BtlBasePage {
     @FindBy(tagName = "h1")
     private WebElement calculatorTitle;
 
-//    public boolean isAtCalculatorPage() {
-//        return calculatorTitle.getText().contains("חישוב דמי ביטוח עבור עצמאי");
-//    }
-
     public boolean isAtCalculatorPage() {
         return calculatorTitle.getText().contains("חישוב דמי ביטוח עבור עצמאי, תלמיד, שוהה בחוץ לארץ ומי שלא עובד");
     }
@@ -66,39 +62,6 @@ public class InsuranceCalculatorPage extends BtlBasePage {
     // אם הכותרת נכונה, נחזיר true
     // אם יש שגיאה, נדפיס הודעת שגיאה
     // ונחזיר false
-//    public boolean isAtStepTwo() {
-//        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-//        try {
-//            wait.until(ExpectedConditions.visibilityOf(stepTwo));
-//            wait.until(ExpectedConditions.textToBePresentInElement(stepTwo, "צעד שני"));
-//            return stepTwo.getText().trim().equals("צעד שני");
-//        } catch (Exception e) {
-//            System.out.println("שגיאה בהגעה לשלב השני: " + e.getMessage());
-//            return false;
-//        }
-//    }
-//    public boolean isAtStepTwo() {
-//        System.out.println("בודק אם הגענו לשלב השני של המחשבון...");
-//        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
-//        try {
-//            // המתן שהאלמנט יופיע בדף
-//            wait.until(ExpectedConditions.visibilityOf(stepTwo));
-//
-//            // המתן שהטקסט יכיל את "צעד שני"
-//            wait.until(ExpectedConditions.textToBePresentInElement(stepTwo, "צעד שני"));
-//
-//            // קריאה לטקסט בפועל
-//            String text = stepTwo.getText().trim();
-//            System.out.println("טקסט באלמנט: '" + text + "'");
-//
-//            // בדיקה סופית
-//            return text.equals(" צעד שני");
-//
-//        } catch (Exception e) {
-//            System.out.println("שגיאה בהגעה לשלב השני: " + e.getMessage());
-//            return false;
-//        }
-//    }
     public boolean isAtStepTwo() {
         System.out.println("בודק אם הגענו לשלב השני של המחשבון...");
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
@@ -122,20 +85,6 @@ public class InsuranceCalculatorPage extends BtlBasePage {
         }
     }
 
-//    public boolean isAtStepTwo() {
-//        System.out.println("בודק אם הגענו לשלב השני של המחשבון...");
-//        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-//        try {
-//            wait.until(ExpectedConditions.visibilityOf(stepTwo));
-//            String text = stepTwo.getText().trim();
-//            System.out.println("טקסט באלמנט: '" + text + "'");
-//            return text.contains("צעד שני");
-//        } catch (Exception e) {
-//            System.out.println("שגיאה בהגעה לשלב השני: " + e.getMessage());
-//            return false;
-//        }
-//    }
-
     // בחירת הרדיו: לא מקבל קצבת נכות
     @FindBy(id = "ctl00_ctl43_g_642b1586_5c41_436a_a04c_e3b5ba94ba69_ctl00_InsuranceNotSachirWizard_rdb_GetNechut_1")
     private WebElement noDisabilityRadio;
@@ -144,17 +93,7 @@ public class InsuranceCalculatorPage extends BtlBasePage {
     @FindBy(id = "ctl00_ctl43_g_642b1586_5c41_436a_a04c_e3b5ba94ba69_ctl00_InsuranceNotSachirWizard_StepNavigationTemplateContainerID_StepNextButton")
     private WebElement nextStepTwoButton;
 
-    //    // מילוי הצעד השני של המחשבון
-//    public void fillStepTwo() {
-//        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-//
-//        wait.until(ExpectedConditions.elementToBeClickable(noDisabilityRadio));
-//        noDisabilityRadio.click();  // קליק רגיל
-//
-//        wait.until(ExpectedConditions.elementToBeClickable(nextStepTwoButton));
-//        nextStepTwoButton.click();  // קליק רגיל
-//    }
-// מילוי הצעד השני של המחשבון עם קליקים ב-JS
+    // מילוי הצעד השני של המחשבון עם קליקים ב-JS
     public void fillStepTwo() {
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
 

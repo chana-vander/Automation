@@ -1,85 +1,94 @@
 package extensions;
 
-import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.ExtentTest;
 import org.junit.jupiter.api.extension.*;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import utils.ReportManager;
+import utils.DriverManager;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.Optional;
+import java.nio.file.Paths;
+import java.time.Duration;
 
-public class ReportExtension implements BeforeAllCallback, AfterAllCallback, TestWatcher {
-    private static ExtentReports extent;
-    private static final ExtensionContext.Namespace NAMESPACE = ExtensionContext.Namespace.create(ReportExtension.class);
+public class ReportExtension implements BeforeAllCallback, AfterAllCallback, BeforeEachCallback, AfterEachCallback, TestWatcher, ParameterResolver {
+
+    private static ExtentTest test;
 
     @Override
     public void beforeAll(ExtensionContext context) {
-        extent = ReportManager.getReporter();
-        context.getStore(NAMESPACE).put("extent", extent);
+        ReportManager.getReport();
     }
 
     @Override
     public void afterAll(ExtensionContext context) {
-        ExtentReports ext = (ExtentReports) context.getStore(NAMESPACE).get("extent", ExtentReports.class);
-        if (ext != null) ext.flush();
+        ReportManager.flushReport();
+    }
+
+    @Override
+    public void beforeEach(ExtensionContext context) {
+        String testName = context.getDisplayName();
+        test = ReportManager.getReport().createTest(testName);
+    }
+
+    @Override
+    public void afterEach(ExtensionContext context) {
+        // Nothing here, handled in TestWatcher
     }
 
     @Override
     public void testFailed(ExtensionContext context, Throwable cause) {
-        ExtentTest test = getOrCreateTest(context);
-        WebDriver driver = extensions.DriverExtension.getDriver(context);
-        attachScreenshot(driver, context.getDisplayName(), test);
-        test.fail("טסט נכשל: " + cause.getMessage());
+        test.fail(cause);
+        attachScreenshot(); // ✅ קודם כל לצלם
+        DriverManager.quitDriver(); // ✅ רק אחר כך לסגור
     }
 
     @Override
     public void testSuccessful(ExtensionContext context) {
-        ExtentTest test = getOrCreateTest(context);
-        test.pass("עבר בהצלחה");
+        test.pass("Test passed");
+        DriverManager.quitDriver(); // גם אחרי הצלחה סוגרים
+
+    }
+
+    private void attachScreenshot() {
+        WebDriver driver = DriverManager.getDriver();
+        if (driver != null && driver instanceof TakesScreenshot) {
+            try {
+                // ודא שהדף נטען לחלוטין
+                new WebDriverWait(driver, Duration.ofSeconds(2))
+                        .until(d -> ((JavascriptExecutor) d)
+                                .executeScript("return document.readyState").equals("complete"));
+
+                File src = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
+                String destDir = "screenshots";
+                String dest = destDir + "/" + System.currentTimeMillis() + ".png";
+
+                Files.createDirectories(Paths.get(destDir));
+                Files.copy(src.toPath(), Paths.get(dest));
+
+                test.addScreenCaptureFromPath(dest);
+            } catch (IOException e) {
+                test.warning("Screenshot failed: " + e.getMessage());
+            } catch (Exception e) {
+                test.warning("Unexpected error during screenshot: " + e.getMessage());
+            }
+        } else {
+            test.warning("Driver is null or doesn't support screenshots");
+        }
     }
 
     @Override
-    public void testDisabled(ExtensionContext context, Optional<String> reason) {
-        ExtentTest test = getOrCreateTest(context);
-        test.skip("הטסט נוטרל: " + reason.orElse("לא צוינה סיבה"));
+    public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
+        return false;
     }
 
     @Override
-    public void testAborted(ExtensionContext context, Throwable cause) {
-        ExtentTest test = getOrCreateTest(context);
-        test.skip("הטסט בוטל: " + cause.getMessage());
-    }
-
-    private ExtentTest getOrCreateTest(ExtensionContext context) {
-        ExtentTest test = (ExtentTest) context.getStore(NAMESPACE).get(context.getDisplayName(), ExtentTest.class);
-        if (test == null) {
-            ExtentReports ext = (ExtentReports) context.getStore(NAMESPACE).get("extent", ExtentReports.class);
-            if (ext == null) ext = extent;
-            test = ext.createTest(context.getDisplayName());
-            context.getStore(NAMESPACE).put(context.getDisplayName(), test);
-        }
-        return test;
-    }
-
-    private void attachScreenshot(WebDriver driver, String name, ExtentTest test) {
-        if (driver == null) {
-            test.warning("לא ניתן לצלם מסך כי הדרייבר לא מאותחל");
-            return;
-        }
-        try {
-            File src = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
-            String dirPath = "screenshots/";
-            new File(dirPath).mkdirs();
-            String path = dirPath + name + ".png";
-            Files.copy(src.toPath(), new File(path).toPath());
-            test.addScreenCaptureFromPath(path);
-        } catch (IOException e) {
-            test.warning("שגיאה בצילום מסך: " + e.getMessage());
-        }
+    public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
+        return null;
     }
 }

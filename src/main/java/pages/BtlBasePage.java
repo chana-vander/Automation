@@ -32,6 +32,13 @@ public class BtlBasePage extends BasePage {
         clickSubMenu("דמי ביטוח לאומי"); // תפריט משנה
     }
 
+    // מעבר לעמוד קצבאות והטבות
+    public void navigateToBenefits() {
+        System.out.println("Trying to click on menu: " +MainMenu.קצבאות.getText());
+        clickMenu(MainMenu.קצבאות); // דמי ביטוח
+        clickSubMenu("אבטלה"); // תפריט משנה
+    }
+
     public BranchesPage goToBranchesPage() {
         WebElement branchesLink = driver.findElement(By.linkText("סניפים"));
         branchesLink.click();

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CopilotDiffPersistence">
+    <option name="pendingDiffs">
+      <map>
+        <entry key="$PROJECT_DIR$/src/test/java/tests/NavigationTest.java">
+          <value>
+            <PendingDiffInfo>
+              <option name="filePath" value="$PROJECT_DIR$/src/test/java/tests/NavigationTest.java" />
+              <option name="originalContent" value="package tests;&#10;&#10;import pages.BtlBasePage;&#10;import pages.HomePage;&#10;&#10;public class NavigationTest extends BaseTest {&#10;&#10;    @ParameterizedTest(name = &quot;Navigate to קצבאות והטבות -&gt; {0} and check title contains {1}&quot;)&#10;    @CsvSource({&#10;            &quot;אבטלה, אבטלה&quot;,&#10;            &quot;דמי לידה, דמי לידה&quot;,&#10;            &quot;נכות כללית, נכות כללית&quot;,&#10;            &quot;מענק בעבודה נדרשת, מענק לחייל משוחרר בעבודה נדרשת (מועדפת)&quot;,&#10;            &quot;ניידות, ניידות&quot;&#10;    })&#10;    public void testNavigateFromBenefitsMenu(String subMenu, String expectedTitlePart) {&#10;        HomePage homePage = new HomePage(driver);&#10;        BtlBasePage btlBasePage = new BtlBasePage(driver);&#10;        &#10;        System.out.println(&quot; ניגש לתפריט 'קצבאות והטבות'&quot;);&#10;        btlBasePage.clickMenu();&#10;&#10;        System.out.println(&quot; לוחץ על תת-תפריט: &quot; + subMenu);&#10;        btlBasePage.clickSubMenu(subMenu);&#10;&#10;        btlBasePage benefitsPage = new BenefitsPage(driver);&#10;&#10;        String actualTitle = benefitsPage.getPageTitle(); // פונקציה שתשלוף את הטקסט לדוגמה מ־&lt;h1&gt;&#10;        System.out.println(&quot; כותרת שנמצאה בדף: &quot; + actualTitle);&#10;        System.out.println(&quot; טקסט שציפיתי לראות: &quot; + expectedTitlePart);&#10;&#10;        assertTrue(actualTitle.contains(expectedTitlePart), &quot;❌ לא הגעת לדף הנכון!&quot;);&#10;    }&#10;}&#10;" />
+              <option name="updatedContent" value="package tests;&#10;&#10;import org.junit.jupiter.params.ParameterizedTest;&#10;import org.junit.jupiter.params.provider.CsvSource;&#10;import org.junit.jupiter.api.Assertions;&#10;import pages.BtlBasePage;&#10;import pages.BenefitsPage;&#10;import enums.MainMenu;&#10;&#10;public class NavigationTest extends BaseTest {&#10;&#10;    @ParameterizedTest(name = &quot;Navigate to קצבאות והטבות -&gt; {0} and check title contains {1}&quot;)&#10;    @CsvSource({&#10;            &quot;אבטלה, אבטלה&quot;,&#10;            &quot;דמי לידה, דמי לידה&quot;,&#10;            &quot;נכות כללית, נכות כללית&quot;,&#10;            &quot;מענק בעבודה נדרשת, מענק לחייל משוחרר בעבודה נדרשת (מועדפת)&quot;,&#10;            &quot;ניידות, ניידות&quot;&#10;    })&#10;    public void testNavigateFromBenefitsMenu(String subMenu, String expectedTitlePart) {&#10;        BtlBasePage btlBasePage = new BtlBasePage(driver);&#10;        // נווט לתפריט קצבאות והטבות&#10;        btlBasePage.clickMenu(MainMenu.קצבאות);&#10;        // נווט לתת-תפריט&#10;        btlBasePage.clickSubMenu(subMenu);&#10;&#10;        BenefitsPage benefitsPage = new BenefitsPage(driver);&#10;        String actualTitle = benefitsPage.getPageTitle(); // שליפת כותרת הדף&#10;        System.out.println(&quot; כותרת שנמצאה בדף: &quot; + actualTitle);&#10;        System.out.println(&quot; טקסט שציפיתי לראות: &quot; + expectedTitlePart);&#10;&#10;        Assertions.assertTrue(actualTitle.contains(expectedTitlePart), &quot;❌ לא הגעת לדף הנכון!&quot;);&#10;    }&#10;}" />
+            </PendingDiffInfo>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>
